@@ -1,0 +1,37 @@
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+
+from typing import List, Optional
+
+class Solution:
+    def preorderTraversal(self, root: Optional[TreeNode]) -> List[int]:
+        res = []
+        curr = root
+
+        while curr:
+            # If there is no left child
+            if not curr.left:
+                res.append(curr.val)
+                curr = curr.right
+            else:
+                # Find inorder predecessor
+                pred = curr.left
+
+                while pred.right and pred.right != curr:
+                    pred = pred.right
+
+                # Create thread
+                if not pred.right:
+                    res.append(curr.val)   # Preorder: visit before going left
+                    pred.right = curr
+                    curr = curr.left
+                else:
+                    # Remove thread
+                    pred.right = None
+                    curr = curr.right
+
+        return res
